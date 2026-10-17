@@ -28,9 +28,7 @@ from bulvar_scraper import (
 
 # The eleven patterns this scraper used before they collapsed into BREADCRUMB_RE.
 # Kept here so the replacement stays provably equivalent.
-LEGACY_BREADCRUMB_PATTERNS = [
-    r'^[A-Z][a-z]+' + r'\s+[a-z]+' * n + r'$' for n in range(11)
-]
+LEGACY_BREADCRUMB_PATTERNS = [r"^[A-Z][a-z]+" + r"\s+[a-z]+" * n + r"$" for n in range(11)]
 
 RSS = """<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0"><channel>
@@ -63,9 +61,9 @@ def test_breadcrumb_filter_matches_every_legacy_pattern(extra_words):
 @pytest.mark.parametrize(
     "title",
     [
-        "Ministr financi oznamil zmenu v DPH",     # second capital
-        "Cesko ma 10 novych nemocnic celkem",      # digit
-        "Praha, Brno a Ostrava hlasi problem",     # punctuation
+        "Ministr financi oznamil zmenu v DPH",  # second capital
+        "Cesko ma 10 novych nemocnic celkem",  # digit
+        "Praha, Brno a Ostrava hlasi problem",  # punctuation
     ],
 )
 def test_real_headlines_survive_the_breadcrumb_filter(title):
@@ -99,15 +97,11 @@ def test_eleven_word_breadcrumb_is_dropped_but_twelve_word_is_kept():
 
 
 def test_cdata_wrapper_is_removed():
-    assert clean_title("<![CDATA[Prezident podepsal novelu zákona]]>") == (
-        "Prezident podepsal novelu zákona"
-    )
+    assert clean_title("<![CDATA[Prezident podepsal novelu zákona]]>") == ("Prezident podepsal novelu zákona")
 
 
 def test_whitespace_is_collapsed():
-    assert clean_title("  Prezident\n\tpodepsal   novelu zákona  ") == (
-        "Prezident podepsal novelu zákona"
-    )
+    assert clean_title("  Prezident\n\tpodepsal   novelu zákona  ") == ("Prezident podepsal novelu zákona")
 
 
 @pytest.mark.parametrize("title", ["", None, "Krátký titulek"])
@@ -154,9 +148,7 @@ def test_entity_expansion_is_refused():
 
 def test_titles_are_decoded_from_a_windows_1250_feed():
     raw = RSS.replace("utf-8", "windows-1250")
-    assert extract_titles(raw.encode("windows-1250")) == [
-        "Prezident dnes podepsal novelu zákona o dani"
-    ]
+    assert extract_titles(raw.encode("windows-1250")) == ["Prezident dnes podepsal novelu zákona o dani"]
 
 
 # --- save_titles ------------------------------------------------------------

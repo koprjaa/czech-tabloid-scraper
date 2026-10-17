@@ -47,38 +47,38 @@ ASCII_ART = r"""
 ▀▀ ▝▀▘ ▘▘ ▝▀▘▘   ▀▀ ▝▀ ▘  ▝▀▘▌  ▝▀▘▘
 """
 
-CDATA_RE = re.compile(r'<!\[CDATA\[(.*?)\]\]>')
+CDATA_RE = re.compile(r"<!\[CDATA\[(.*?)\]\]>")
 
 # A breadcrumb reads "Zpravy z domova": one capitalized word, then lowercase words
 # only. Real headlines carry a second capital, a digit or punctuation somewhere.
 # The upper bound of ten trailing words comes from the original pattern list.
-BREADCRUMB_RE = re.compile(r'^[A-Z][a-z]+(?:\s+[a-z]+){0,10}$')
+BREADCRUMB_RE = re.compile(r"^[A-Z][a-z]+(?:\s+[a-z]+){0,10}$")
 
 # Menu labels are often set in capitals, for example "NEJNOVEJSI CLANKY".
-ALL_CAPS_RE = re.compile(r'^[A-Z\s]+$')
+ALL_CAPS_RE = re.compile(r"^[A-Z\s]+$")
 
 # Shorter strings are navigation, not headlines.
 MIN_TITLE_LENGTH = 20
 
 FEEDS = {
-    'super_cz': 'https://www.super.cz/rss',
-    'blesk_cz': 'https://www.blesk.cz/rss',
-    'extra_cz': 'https://www.extra.cz/rss.xml',
-    'ahaonline_cz': 'https://www.ahaonline.cz/rss',
-    'novinky_cz': 'https://www.novinky.cz/rss',
-    'idnes_cz': 'https://servis.idnes.cz/rss.aspx',
-    'prozeny_cz': 'https://www.prozeny.cz/rss',
-    'zive_cz': 'https://www.zive.cz/rss',
-    'doupe_cz': 'https://doupe.zive.cz/rss',
-    'zive_sk_najnovsie': 'https://zive.aktuality.sk/rss/najnovsie/',
-    'zive_sk_mobilmania': 'https://zive.aktuality.sk/rss/mobilmania/',
-    'lupa_cz': 'https://www.lupa.cz/rss/clanky-samostatne/',
-    'root_cz': 'https://www.root.cz/rss/clanky/',
-    'reflex_cz': 'https://www.reflex.cz/rss',
-    'respekt_cz': 'https://www.respekt.cz/api/rss',
-    'ceskenoviny_cz': 'https://www.ceskenoviny.cz/sluzby/rss/zpravy.php',
-    'irozhlas_cz': 'https://www.irozhlas.cz/rss/irozhlas',
-    'ct24_cz': 'https://ct24.ceskatelevize.cz/rss/tema/vyber-redakce-84313',
+    "super_cz": "https://www.super.cz/rss",
+    "blesk_cz": "https://www.blesk.cz/rss",
+    "extra_cz": "https://www.extra.cz/rss.xml",
+    "ahaonline_cz": "https://www.ahaonline.cz/rss",
+    "novinky_cz": "https://www.novinky.cz/rss",
+    "idnes_cz": "https://servis.idnes.cz/rss.aspx",
+    "prozeny_cz": "https://www.prozeny.cz/rss",
+    "zive_cz": "https://www.zive.cz/rss",
+    "doupe_cz": "https://doupe.zive.cz/rss",
+    "zive_sk_najnovsie": "https://zive.aktuality.sk/rss/najnovsie/",
+    "zive_sk_mobilmania": "https://zive.aktuality.sk/rss/mobilmania/",
+    "lupa_cz": "https://www.lupa.cz/rss/clanky-samostatne/",
+    "root_cz": "https://www.root.cz/rss/clanky/",
+    "reflex_cz": "https://www.reflex.cz/rss",
+    "respekt_cz": "https://www.respekt.cz/api/rss",
+    "ceskenoviny_cz": "https://www.ceskenoviny.cz/sluzby/rss/zpravy.php",
+    "irozhlas_cz": "https://www.irozhlas.cz/rss/irozhlas",
+    "ct24_cz": "https://ct24.ceskatelevize.cz/rss/tema/vyber-redakce-84313",
 }
 
 
@@ -86,23 +86,24 @@ def print_art():
     """Print embedded ASCII art."""
     console.print(Text(ASCII_ART, style="bold white"))
 
+
 def fetch_rss_feed(url):
     """Fetch RSS feed from the given URL."""
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         }
         response = requests.get(url, headers=headers, timeout=15)
         response.raise_for_status()
 
         raw_content = response.content
         detected = chardet.detect(raw_content)
-        encoding = detected['encoding'] if detected['encoding'] else 'utf-8'
+        encoding = detected["encoding"] if detected["encoding"] else "utf-8"
 
         try:
             content = raw_content.decode(encoding)
         except UnicodeDecodeError:
-            content = raw_content.decode('utf-8', errors='ignore')
+            content = raw_content.decode("utf-8", errors="ignore")
 
     except requests.RequestException:
         # The caller reports the failure, so the progress bar stays intact.
@@ -110,13 +111,14 @@ def fetch_rss_feed(url):
     else:
         return content
 
+
 def clean_title(title):
     """Clean and filter title text."""
     if not title:
         return ""
 
-    title = CDATA_RE.sub(r'\1', title)
-    title = re.sub(r'\s+', ' ', title.strip())
+    title = CDATA_RE.sub(r"\1", title)
+    title = re.sub(r"\s+", " ", title.strip())
 
     # Skip likely navigation items or empty content
     if len(title) < MIN_TITLE_LENGTH:
@@ -130,6 +132,7 @@ def clean_title(title):
 
     return title
 
+
 def extract_titles(xml_content):
     """Extract titles from RSS XML content."""
     try:
@@ -141,20 +144,17 @@ def extract_titles(xml_content):
 
     # RSS uses <item>, Atom uses <entry>. Atom also namespaces its tags, so match
     # on the local name instead of hardcoding the namespace of each feed.
-    items = root.findall('.//item') or [
-        el for el in root.iter() if el.tag.rpartition('}')[2] == 'entry'
-    ]
+    items = root.findall(".//item") or [el for el in root.iter() if el.tag.rpartition("}")[2] == "entry"]
 
     titles = []
     for item in items:
-        title_elem = next(
-            (el for el in item if el.tag.rpartition('}')[2] == 'title'), None
-        )
+        title_elem = next((el for el in item if el.tag.rpartition("}")[2] == "title"), None)
         if title_elem is not None and title_elem.text:
             cleaned = clean_title(title_elem.text)
             if cleaned:
                 titles.append(cleaned)
     return titles
+
 
 def save_titles(titles, output_dir):
     """Write titles one per line into a timestamped file, replacing older runs."""
@@ -183,9 +183,8 @@ def main():
         BarColumn(bar_width=None, style="white", complete_style="bold white", finished_style="bold white"),
         TaskProgressColumn(style="bold white"),
         TimeElapsedColumn(),
-        console=console
+        console=console,
     ) as progress:
-
         task = progress.add_task("[bold white]Scraping feeds...", total=len(FEEDS))
 
         for feed_name, url in FEEDS.items():
@@ -202,7 +201,9 @@ def main():
 
             progress.advance(task)
 
-    console.print(f"[bold white]Scraping finished![/bold white] Found [bold white]{len(all_titles)}[/bold white] titles total.")
+    console.print(
+        f"[bold white]Scraping finished![/bold white] Found [bold white]{len(all_titles)}[/bold white] titles total."
+    )
 
     if not all_titles:
         console.print("[bold white]No titles found.[/bold white]")
@@ -222,6 +223,7 @@ def main():
             border_style="white",
         )
     )
+
 
 if __name__ == "__main__":
     main()
