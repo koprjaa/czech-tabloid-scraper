@@ -10,7 +10,7 @@ version = "1.0.0"
 edition = "2021"
 authors = ["Jan Alexandr Kopřiva <jan.alexandr.kopriva@gmail.com>"]
 license = "MIT"
-description = "Collect headlines from 18 Czech RSS and Atom feeds"
+description = "Collects headlines from 18 Czech news and tabloid feeds."
 
 [[bin]]
 name = "bulvar_scraper"
