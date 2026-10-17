@@ -1,4 +1,0 @@
-chardet
-defusedxml>=0.7.1
-requests
-rich

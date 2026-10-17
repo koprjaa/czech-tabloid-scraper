@@ -1,11 +1,14 @@
-__pycache__/
-*.pyc
+/target/
+/.cargo/
+/.rustup/
+/rustup-init.sh
+*.log
 .DS_Store
 scraped_output/
-venv/
 .env
-
-# Tooling caches
+__pycache__/
+*.pyc
+venv/
 .pytest_cache/
 .ruff_cache/
 uv.lock

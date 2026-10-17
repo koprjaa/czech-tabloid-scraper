@@ -1,11 +1,15 @@
-name: CI
+# Project: czech-tabloid-scraper
+# File: .github/workflows/ci.yml
+# Description: Cross-platform Rust validation.
+# Author: Jan Alexandr Kopřiva
+# License: MIT
 
+name: CI
 on:
   push:
     branches: [master, main]
   pull_request:
     branches: [master, main]
-
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -13,15 +17,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-
-      - name: Lint (ruff)
-        run: uv run --python ${{ matrix.python-version }} --extra dev ruff check .
-
-      - name: Test (pytest)
-        run: uv run --python ${{ matrix.python-version }} --extra dev pytest -q
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Check formatting
+        run: cargo fmt --check
+      - name: Lint all targets
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Run tests
+        run: cargo test
+      - name: Build release binary
+        run: cargo build --release
