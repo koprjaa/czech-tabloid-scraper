@@ -1,0 +1,389 @@
+[
+  {
+    "name": "doctype ",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "doctype <!DOCTYPE rss>",
+    "mode": "xml",
+    "input": "3c21444f4354595045207273733e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "doctype <!DOCTYPE rss SYSTEM \"http://127.0.0.1:9/no\">",
+    "mode": "xml",
+    "input": "3c21444f4354595045207273732053595354454d2022687474703a2f2f3132372e302e302e313a392f6e6f223e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "doctype <!DOCTYPE rss [<!ATTLIST title lang CDATA \"cs\">]>",
+    "mode": "xml",
+    "input": "3c21444f435459504520727373205b3c214154544c495354207469746c65206c616e6720434441544120226373223e5d3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "bytes utf-8",
+    "mode": "bytes",
+    "input": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d227574662d38223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode utf-8",
+    "mode": "decode",
+    "input": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d227574662d38223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"utf-8\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"utf-8\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "bytes utf-8-sig",
+    "mode": "bytes",
+    "input": "efbbbf3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d227574662d382d736967223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode utf-8-sig",
+    "mode": "decode",
+    "input": "efbbbf3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d227574662d382d736967223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"utf-8-sig\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"utf-8-sig\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "bytes utf-16",
+    "mode": "bytes",
+    "input": "fffe3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d003100360022003f003e003c007200730073003e003c006900740065006d003e003c007400690074006c0065003e005000720065007a006900640065006e007400200064006e0065007300200070006f00640065007000730061006c0020006e006f00760065006c00750020007a00e1006b006f006e00610020006f002000640061006e0069003c002f007400690074006c0065003e003c002f006900740065006d003e003c002f007200730073003e00",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode utf-16",
+    "mode": "decode",
+    "input": "fffe3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d003100360022003f003e003c007200730073003e003c006900740065006d003e003c007400690074006c0065003e005000720065007a006900640065006e007400200064006e0065007300200070006f00640065007000730061006c0020006e006f00760065006c00750020007a00e1006b006f006e00610020006f002000640061006e0069003c002f007400690074006c0065003e003c002f006900740065006d003e003c002f007200730073003e00",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"utf-16\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"utf-16\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "bytes utf-16-le",
+    "mode": "bytes",
+    "input": "3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d00310036002d006c00650022003f003e003c007200730073003e003c006900740065006d003e003c007400690074006c0065003e005000720065007a006900640065006e007400200064006e0065007300200070006f00640065007000730061006c0020006e006f00760065006c00750020007a00e1006b006f006e00610020006f002000640061006e0069003c002f007400690074006c0065003e003c002f006900740065006d003e003c002f007200730073003e00",
+    "python": [
+      "EXCEPTION: multi-byte encodings are not supported"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode utf-16-le",
+    "mode": "decode",
+    "input": "3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d00310036002d006c00650022003f003e003c007200730073003e003c006900740065006d003e003c007400690074006c0065003e005000720065007a006900640065006e007400200064006e0065007300200070006f00640065007000730061006c0020006e006f00760065006c00750020007a00e1006b006f006e00610020006f002000640061006e0069003c002f007400690074006c0065003e003c002f006900740065006d003e003c002f007200730073003e00",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"utf-16-le\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"utf-16-le\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "bytes utf-16-be",
+    "mode": "bytes",
+    "input": "003c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d00310036002d006200650022003f003e003c007200730073003e003c006900740065006d003e003c007400690074006c0065003e005000720065007a006900640065006e007400200064006e0065007300200070006f00640065007000730061006c0020006e006f00760065006c00750020007a00e1006b006f006e00610020006f002000640061006e0069003c002f007400690074006c0065003e003c002f006900740065006d003e003c002f007200730073003e",
+    "python": [
+      "EXCEPTION: multi-byte encodings are not supported"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode utf-16-be",
+    "mode": "decode",
+    "input": "003c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d00310036002d006200650022003f003e003c007200730073003e003c006900740065006d003e003c007400690074006c0065003e005000720065007a006900640065006e007400200064006e0065007300200070006f00640065007000730061006c0020006e006f00760065006c00750020007a00e1006b006f006e00610020006f002000640061006e0069003c002f007400690074006c0065003e003c002f006900740065006d003e003c002f007200730073003e",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"utf-16-be\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"utf-16-be\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "bytes utf-32",
+    "mode": "bytes",
+    "input": "fffe00003c0000003f000000780000006d0000006c0000002000000076000000650000007200000073000000690000006f0000006e0000003d00000022000000310000002e000000300000002200000020000000650000006e000000630000006f00000064000000690000006e000000670000003d000000220000007500000074000000660000002d0000003300000032000000220000003f0000003e0000003c0000007200000073000000730000003e0000003c0000006900000074000000650000006d0000003e0000003c0000007400000069000000740000006c000000650000003e0000005000000072000000650000007a0000006900000064000000650000006e0000007400000020000000640000006e000000650000007300000020000000700000006f00000064000000650000007000000073000000610000006c000000200000006e0000006f00000076000000650000006c00000075000000200000007a000000e10000006b0000006f0000006e00000061000000200000006f0000002000000064000000610000006e000000690000003c0000002f0000007400000069000000740000006c000000650000003e0000003c0000002f0000006900000074000000650000006d0000003e0000003c0000002f0000007200000073000000730000003e000000",
+    "python": [],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode utf-32",
+    "mode": "decode",
+    "input": "fffe00003c0000003f000000780000006d0000006c0000002000000076000000650000007200000073000000690000006f0000006e0000003d00000022000000310000002e000000300000002200000020000000650000006e000000630000006f00000064000000690000006e000000670000003d000000220000007500000074000000660000002d0000003300000032000000220000003f0000003e0000003c0000007200000073000000730000003e0000003c0000006900000074000000650000006d0000003e0000003c0000007400000069000000740000006c000000650000003e0000005000000072000000650000007a0000006900000064000000650000006e0000007400000020000000640000006e000000650000007300000020000000700000006f00000064000000650000007000000073000000610000006c000000200000006e0000006f00000076000000650000006c00000075000000200000007a000000e10000006b0000006f0000006e00000061000000200000006f0000002000000064000000610000006e000000690000003c0000002f0000007400000069000000740000006c000000650000003e0000003c0000002f0000006900000074000000650000006d0000003e0000003c0000002f0000007200000073000000730000003e000000",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"utf-32\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"utf-32\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "bytes windows-1250",
+    "mode": "bytes",
+    "input": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d2277696e646f77732d31323530223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ae16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode windows-1250",
+    "mode": "decode",
+    "input": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d2277696e646f77732d31323530223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ae16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"windows-1250\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"windows-1250\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "bytes iso-8859-2",
+    "mode": "bytes",
+    "input": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d2269736f2d383835392d32223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ae16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode iso-8859-2",
+    "mode": "decode",
+    "input": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d2269736f2d383835392d32223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ae16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"iso-8859-2\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"iso-8859-2\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "bytes iso-8859-1",
+    "mode": "bytes",
+    "input": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d2269736f2d383835392d31223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ae16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "decode iso-8859-1",
+    "mode": "decode",
+    "input": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d2269736f2d383835392d31223f3e3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ae16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ],
+    "rust": [
+      "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?><rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>"
+    ]
+  },
+  {
+    "name": "clean '<![CDATA[Prezident dnes podepsal novelu zákona o dani\\rabc]]>'",
+    "mode": "clean",
+    "input": "3c215b43444154415b5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e690d6162635d5d3e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani abc"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani abc"
+    ]
+  },
+  {
+    "name": "clean '<![CDATA[Prezident dnes podepsal novelu zákona o dani\\nabc]]>'",
+    "mode": "clean",
+    "input": "3c215b43444154415b5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e690a6162635d5d3e",
+    "python": [
+      "<![CDATA[Prezident dnes podepsal novelu zákona o dani abc]]>"
+    ],
+    "rust": [
+      "<![CDATA[Prezident dnes podepsal novelu zákona o dani abc]]>"
+    ]
+  },
+  {
+    "name": "clean 'Prezident dnes podepsal novelu zákona o dani\\x85 test'",
+    "mode": "clean",
+    "input": "5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e69c2852074657374",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani test"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani test"
+    ]
+  },
+  {
+    "name": "clean 'ÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁǅ'",
+    "mode": "clean",
+    "input": "c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c785",
+    "python": [
+      "ÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁǅ"
+    ],
+    "rust": [
+      "ÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁǅ"
+    ]
+  },
+  {
+    "name": "clean 'ÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁʕ'",
+    "mode": "clean",
+    "input": "c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381c381ca95",
+    "python": [
+      "ÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁʕ"
+    ],
+    "rust": [
+      "ÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁÁʕ"
+    ]
+  },
+  {
+    "name": "mixed Prezident dnes podepsal novelu zákona o dani<!--c--> tail",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c212d2d632d2d3e207461696c3c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani tail"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani tail"
+    ]
+  },
+  {
+    "name": "mixed Prezident dnes podepsal novelu zákona o dani<?p a?> tail",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c3f7020613f3e207461696c3c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani tail"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani tail"
+    ]
+  },
+  {
+    "name": "mixed Prezident dnes podepsal novelu zákona o dani&#13;tail",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e69262331333b7461696c3c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani tail"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani tail"
+    ]
+  },
+  {
+    "name": "mixed <![CDATA[Prezident dnes podepsal novelu zákona o dani]]>",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c653e3c215b43444154415b5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e695d5d3e3c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "mixed Prezident dnes podepsal novelu zákona o dani<b/>tail",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c622f3e7461696c3c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "xml ''",
+    "mode": "xml",
+    "input": "",
+    "python": [],
+    "rust": []
+  },
+  {
+    "name": "xml '<rss><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss>junk'",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e6a756e6b",
+    "python": [],
+    "rust": []
+  },
+  {
+    "name": "xml '<rss xmlns=\"x\"><item><title>Prezident dnes podepsal novelu zákona o dani</title></item></rss xmlns=\"x\">'",
+    "mode": "xml",
+    "input": "3c72737320786d6c6e733d2278223e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f72737320786d6c6e733d2278223e",
+    "python": [],
+    "rust": []
+  },
+  {
+    "name": "xml '<rss><item><title xmlns=\"x\">Prezident dnes podepsal novelu zákona o dani</title></item></rss>'",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c6520786d6c6e733d2278223e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e693c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ],
+    "rust": [
+      "Prezident dnes podepsal novelu zákona o dani"
+    ]
+  },
+  {
+    "name": "xml '<rss><item><title>Prezident dnes podepsal novelu zákona o dani\\x01</title></item></rss>'",
+    "mode": "xml",
+    "input": "3c7273733e3c6974656d3e3c7469746c653e5072657a6964656e7420646e657320706f64657073616c206e6f76656c75207ac3a16b6f6e61206f2064616e69013c2f7469746c653e3c2f6974656d3e3c2f7273733e",
+    "python": [],
+    "rust": []
+  }
+]

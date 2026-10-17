@@ -1,11 +1,11 @@
 /target/
-/.cargo/
-/.rustup/
-/rustup-init.sh
 *.log
 .DS_Store
 scraped_output/
 .env
+/.cargo/
+/.rustup/
+/rustup-init.sh
 __pycache__/
 *.pyc
 venv/

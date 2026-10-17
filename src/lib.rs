@@ -84,8 +84,87 @@ pub fn clean_title(title: &str) -> String {
     }
 }
 
+// roxmltree parses elements recursively; bound depth before entering its parser.
+fn bounded_xml_depth(xml: &str) -> bool {
+    let bytes = xml.as_bytes();
+    let mut cursor = 0;
+    let mut depth = 0usize;
+    while let Some(offset) = xml[cursor..].find('<') {
+        let start = cursor + offset;
+        let tail = &xml[start..];
+        let skipped = if tail.starts_with("<!--") {
+            Some("-->")
+        } else if tail.starts_with("<![CDATA[") {
+            Some("]]>")
+        } else if tail.starts_with("<?") {
+            Some("?>")
+        } else {
+            None
+        };
+        if let Some(ending) = skipped {
+            let Some(end) = tail.find(ending) else {
+                return false;
+            };
+            cursor = start + end + ending.len();
+            continue;
+        }
+        let mut end = start + 1;
+        let mut quote = None;
+        let mut brackets = 0usize;
+        while end < bytes.len() {
+            let byte = bytes[end];
+            if let Some(delimiter) = quote {
+                if byte == delimiter {
+                    quote = None;
+                }
+            } else {
+                match byte {
+                    b'\'' | b'"' => quote = Some(byte),
+                    b'[' if tail.starts_with("<!") => brackets += 1,
+                    b']' => brackets = brackets.saturating_sub(1),
+                    b'>' if brackets == 0 => break,
+                    _ => {}
+                }
+            }
+            end += 1;
+        }
+        if end == bytes.len() {
+            return false;
+        }
+        if tail.starts_with("</") {
+            depth = depth.saturating_sub(1);
+        } else if !tail.starts_with("<!") {
+            if depth >= 128 {
+                return false;
+            }
+            if !xml[start..end].trim_end().ends_with('/') {
+                depth += 1;
+            }
+        }
+        cursor = end + 1;
+    }
+    true
+}
+
 pub fn extract_titles(xml: &str) -> Vec<String> {
-    let Ok(doc) = roxmltree::Document::parse(xml) else {
+    if !bounded_xml_depth(xml) {
+        return vec![];
+    }
+    // Ignore declaration-like text inside comments, CDATA and processing instructions.
+    static DECLARATIONS: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"(?s)<!--.*?-->|<!\[CDATA\[.*?\]\]>|<\?.*?\?>|(?P<entity><!ENTITY\s)").unwrap()
+    });
+    if DECLARATIONS
+        .captures_iter(xml)
+        .any(|c| c.name("entity").is_some())
+    {
+        return vec![];
+    }
+    let options = roxmltree::ParsingOptions {
+        allow_dtd: true,
+        ..Default::default()
+    };
+    let Ok(doc) = roxmltree::Document::parse_with_options(xml, options) else {
         return vec![];
     };
     let root = doc.root_element();
@@ -119,7 +198,62 @@ pub fn extract_titles(xml: &str) -> Vec<String> {
         .collect()
 }
 
+fn wide_encoding(raw: &[u8]) -> Option<String> {
+    let (little, width, skip) = if raw.starts_with(&[0xff, 0xfe, 0, 0]) {
+        (true, 4, 4)
+    } else if raw.starts_with(&[0, 0, 0xfe, 0xff]) {
+        (false, 4, 4)
+    } else if raw.starts_with(&[b'<', 0, 0, 0]) {
+        (true, 4, 0)
+    } else if raw.starts_with(&[0, 0, 0, b'<']) {
+        (false, 4, 0)
+    } else if raw.starts_with(&[b'<', 0]) {
+        (true, 2, 0)
+    } else if raw.starts_with(&[0, b'<']) {
+        (false, 2, 0)
+    } else {
+        return None;
+    };
+    let data = &raw[skip..];
+    if !data.len().is_multiple_of(width) {
+        return Some(String::new());
+    }
+    if width == 2 {
+        let units = data.as_chunks::<2>().0.iter().map(|c| {
+            if little {
+                u16::from_le_bytes([c[0], c[1]])
+            } else {
+                u16::from_be_bytes([c[0], c[1]])
+            }
+        });
+        Some(
+            char::decode_utf16(units)
+                .collect::<Result<String, _>>()
+                .unwrap_or_default(),
+        )
+    } else {
+        Some(
+            data.as_chunks::<4>()
+                .0
+                .iter()
+                .map(|c| {
+                    let bytes = [c[0], c[1], c[2], c[3]];
+                    char::from_u32(if little {
+                        u32::from_le_bytes(bytes)
+                    } else {
+                        u32::from_be_bytes(bytes)
+                    })
+                })
+                .collect::<Option<String>>()
+                .unwrap_or_default(),
+        )
+    }
+}
+
 pub fn decode_feed(raw: &[u8]) -> String {
+    if let Some(text) = wide_encoding(raw) {
+        return text;
+    }
     let mut detector = chardetng::EncodingDetector::new();
     detector.feed(raw, true);
     let encoding = encoding_rs::Encoding::for_bom(raw)
@@ -150,13 +284,35 @@ pub fn decode_feed(raw: &[u8]) -> String {
 }
 
 pub fn extract_titles_bytes(raw: &[u8]) -> Vec<String> {
-    let prefix = String::from_utf8_lossy(&raw[..raw.len().min(256)]);
-    static ENCODING: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r#"encoding\s*=\s*["']([^"']+)["']"#).unwrap());
-    let encoding = ENCODING
-        .captures(&prefix)
-        .and_then(|c| encoding_rs::Encoding::for_label(c[1].as_bytes()))
-        .unwrap_or(encoding_rs::UTF_8);
+    if let Some(text) = wide_encoding(raw) {
+        return extract_titles(&text);
+    }
+    let prefix = String::from_utf8_lossy(raw);
+    static ENCODING: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(
+            r#"\A\u{feff}?<\?xml[ \t\r\n]+[^?]*\bencoding[ \t\r\n]*=[ \t\r\n]*["']([^"']+)["']"#,
+        )
+        .unwrap()
+    });
+    let encoding = if let Some(capture) = ENCODING.captures(&prefix) {
+        let label = capture[1].to_ascii_lowercase().replace('_', "-");
+        if matches!(
+            label.as_str(),
+            "iso-8859-1" | "iso8859-1" | "latin-1" | "latin1"
+        ) {
+            let xml: String = raw.iter().map(|&b| char::from(b)).collect();
+            return extract_titles(&xml);
+        }
+        if matches!(label.as_str(), "ascii" | "us-ascii") && !raw.is_ascii() {
+            return vec![];
+        }
+        let Some(encoding) = encoding_rs::Encoding::for_label(capture[1].as_bytes()) else {
+            return vec![];
+        };
+        encoding
+    } else {
+        encoding_rs::UTF_8
+    };
     let (xml, _, errors) = encoding.decode(raw);
     if errors {
         vec![]
@@ -210,28 +366,13 @@ pub fn save_titles(titles: &[String], output_dir: &Path) -> io::Result<PathBuf> 
         content = content.replace('\n', "\r\n");
     }
     // Write first so a failed write cannot destroy the previous snapshot.
-    let staging = output_dir.join(format!(
-        ".titles_{}_{}.tmp",
-        std::process::id(),
-        chrono::Local::now()
-            .timestamp_nanos_opt()
-            .unwrap_or_default()
-    ));
-    let mut file = fs::OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .open(&staging)?;
-    let written = (|| -> io::Result<()> {
+    let mut staging = tempfile::NamedTempFile::new_in(output_dir)?;
+    {
         use io::Write;
-        file.write_all(content.as_bytes())?;
-        file.sync_all()?;
-        drop(file);
-        fs::rename(&staging, &path)
-    })();
-    if written.is_err() {
-        let _ = fs::remove_file(&staging);
+        staging.write_all(content.as_bytes())?;
+        staging.as_file().sync_all()?;
     }
-    written?;
+    staging.persist(&path).map_err(|error| error.error)?;
     for entry in fs::read_dir(output_dir)? {
         let old = entry?.path();
         let name = old.file_name().unwrap_or_default().to_string_lossy();

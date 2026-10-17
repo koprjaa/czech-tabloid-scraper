@@ -405,3 +405,45 @@ fn current_directory_output_and_cleanup() {
         "Prezident dnes podepsal novelu zákona o dani\n"
     );
 }
+
+#[test]
+fn read_timeout_is_enforced() {
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    let url = format!("http://{}", listener.local_addr().unwrap());
+    let server = thread::spawn(move || {
+        let (mut stream, _) = listener.accept().unwrap();
+        stream
+            .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 100\r\nConnection: close\r\n\r\nx")
+            .unwrap();
+        thread::sleep(std::time::Duration::from_secs(16));
+    });
+    let started = std::time::Instant::now();
+    assert!(fetch_rss_feed(&http_client().unwrap(), &url).is_none());
+    assert!(started.elapsed() < std::time::Duration::from_secs(20));
+    server.join().unwrap();
+}
+
+#[test]
+fn redirect_loop_is_bounded() {
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    let url = format!("http://{}", listener.local_addr().unwrap());
+    let location = url.clone();
+    let server = thread::spawn(move || {
+        for _ in 0..31 {
+            let (mut stream, _) = listener.accept().unwrap();
+            stream
+                .set_read_timeout(Some(std::time::Duration::from_secs(5)))
+                .unwrap();
+            let mut buffer = [0; 4096];
+            let mut request = Vec::new();
+            while !request.windows(4).any(|w| w == b"\r\n\r\n") {
+                let count = stream.read(&mut buffer).unwrap();
+                assert!(count > 0);
+                request.extend_from_slice(&buffer[..count]);
+            }
+            write!(stream, "HTTP/1.1 302 Found\r\nLocation: {location}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").unwrap();
+        }
+    });
+    assert!(fetch_rss_feed(&http_client().unwrap(), &url).is_none());
+    server.join().unwrap();
+}
