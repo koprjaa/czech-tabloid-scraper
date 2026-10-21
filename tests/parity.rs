@@ -201,13 +201,13 @@ fn http_failure_empty_and_malformed() {
         let (url, server) = mock(status, body);
         let dir = tempfile::tempdir().unwrap();
         let mut log = vec![];
-        run(
+        assert!(!run(
             &http_client().unwrap(),
             &[("test", &url)],
             dir.path(),
             &mut log,
         )
-        .unwrap();
+        .unwrap());
         server.join().unwrap();
         let log = String::from_utf8(log).unwrap();
         assert_eq!(log.contains("✗ Failed to fetch test"), failed);
@@ -267,7 +267,7 @@ fn cli_ignores_arguments_and_handles_network_failure() {
         .env("no_proxy", "")
         .output()
         .unwrap();
-    assert!(output.status.success());
+    assert_eq!(output.status.code(), Some(1));
     let log = String::from_utf8(output.stdout).unwrap();
     assert_eq!(log.matches("✗ Failed to fetch ").count(), 18);
     assert!(log.contains("No titles found."));
@@ -295,13 +295,13 @@ fn save_failure_is_reported_and_empty_save_is_allowed() {
     let blocked = dir.path().join("file");
     fs::write(&blocked, "block").unwrap();
     let mut log = vec![];
-    run(
+    assert!(!run(
         &http_client().unwrap(),
         &[("test", &url)],
         &blocked,
         &mut log,
     )
-    .unwrap();
+    .unwrap());
     server.join().unwrap();
     assert!(String::from_utf8(log)
         .unwrap()

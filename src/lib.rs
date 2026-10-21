@@ -160,6 +160,23 @@ pub fn extract_titles(xml: &str) -> Vec<String> {
     {
         return vec![];
     }
+    // roxmltree recurses once per nesting level and its frames are large in
+    // debug builds; test threads (2 MiB) and the Windows main thread (1 MiB) overflow
+    // well below the depth limit. Parse on a thread with a stack that always fits it.
+    std::thread::scope(|scope| {
+        std::thread::Builder::new()
+            .stack_size(PARSE_STACK)
+            .spawn_scoped(scope, || titles_of(xml))
+            .map_or_else(
+                |_| titles_of(xml),
+                |handle| handle.join().unwrap_or_default(),
+            )
+    })
+}
+
+const PARSE_STACK: usize = 32 * 1024 * 1024;
+
+fn titles_of(xml: &str) -> Vec<String> {
     let options = roxmltree::ParsingOptions {
         allow_dtd: true,
         ..Default::default()
@@ -283,6 +300,30 @@ pub fn decode_feed(raw: &[u8]) -> String {
     }
 }
 
+/// The `charset=` parameter of a Content-Type header.
+pub fn charset_of(content_type: &str) -> Option<String> {
+    let lower = content_type.to_ascii_lowercase();
+    let (_, rest) = lower.split_once("charset=")?;
+    let value = rest.split(';').next()?.trim().trim_matches(['"', '\'']);
+    (!value.is_empty()).then(|| value.to_owned())
+}
+
+/// Like `decode_feed`, but trusts a charset the server declared when the bytes
+/// have no BOM and decode cleanly in it; detection alone misreads short
+/// windows-1250 feeds.
+pub fn decode_feed_as(raw: &[u8], charset: Option<&str>) -> String {
+    if wide_encoding(raw).is_none() && encoding_rs::Encoding::for_bom(raw).is_none() {
+        if let Some(encoding) = charset.and_then(|c| encoding_rs::Encoding::for_label(c.as_bytes()))
+        {
+            let (content, _, errors) = encoding.decode(raw);
+            if !errors {
+                return content.into_owned();
+            }
+        }
+    }
+    decode_feed(raw)
+}
+
 pub fn extract_titles_bytes(raw: &[u8]) -> Vec<String> {
     if let Some(text) = wide_encoding(raw) {
         return extract_titles(&text);
@@ -351,7 +392,15 @@ pub fn fetch_rss_feed(client: &HttpClient, url: &str) -> Option<String> {
             .ok()?
             .error_for_status()
             .ok()?;
-        Some(decode_feed(&response.bytes().await.ok()?))
+        let charset = response
+            .headers()
+            .get(reqwest::header::CONTENT_TYPE)
+            .and_then(|v| v.to_str().ok())
+            .and_then(charset_of);
+        Some(decode_feed_as(
+            &response.bytes().await.ok()?,
+            charset.as_deref(),
+        ))
     })
 }
 
@@ -391,11 +440,12 @@ pub fn save_titles(titles: &[String], output_dir: &Path) -> io::Result<PathBuf> 
     Ok(path)
 }
 
+/// `Ok(true)` when a snapshot was saved.
 pub fn run_in_current_dir<W: io::Write>(
     client: &HttpClient,
     feeds: &[(&str, &str)],
     log: W,
-) -> io::Result<()> {
+) -> io::Result<bool> {
     let output = std::env::current_dir()?.join("scraped_output");
     run(client, feeds, &output, log)
 }
@@ -405,7 +455,7 @@ pub fn run<W: io::Write>(
     feeds: &[(&str, &str)],
     output: &Path,
     mut log: W,
-) -> io::Result<()> {
+) -> io::Result<bool> {
     writeln!(log, "{ASCII_ART}\nStarting scraper...")?;
     let mut titles = vec![];
     for (name, url) in feeds {
@@ -426,16 +476,21 @@ pub fn run<W: io::Write>(
     )?;
     if titles.is_empty() {
         writeln!(log, "No titles found.")?;
-    } else {
-        match save_titles(&titles, output) {
-            Ok(path) => writeln!(
+        return Ok(false);
+    }
+    match save_titles(&titles, output) {
+        Ok(path) => {
+            writeln!(
                 log,
                 "╭─ Success ─╮\nSaved {} titles to:\n{}\n╰───────────╯",
                 titles.len(),
                 path.display()
-            )?,
-            Err(error) => writeln!(log, "Error saving file: {error}")?,
+            )?;
+            Ok(true)
+        }
+        Err(error) => {
+            writeln!(log, "Error saving file: {error}")?;
+            Ok(false)
         }
     }
-    Ok(())
 }

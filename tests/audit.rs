@@ -146,3 +146,18 @@ fn snapshots_are_private_and_symlink_targets_are_untouched() {
         0o600
     );
 }
+
+#[test]
+fn server_charset_beats_detection() {
+    // "Česká policie zadržela podezřelého z krádeže" in windows-1250.
+    let (bytes, _, _) =
+        encoding_rs::WINDOWS_1250.encode("Česká policie zadržela podezřelého z krádeže");
+    assert_eq!(
+        decode_feed_as(
+            &bytes,
+            charset_of("text/xml; charset=\"Windows-1250\"").as_deref()
+        ),
+        "Česká policie zadržela podezřelého z krádeže"
+    );
+    assert_eq!(charset_of("text/xml"), None);
+}
